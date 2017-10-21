@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Discord-Hook-Client</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#4a546e">
+
+	<meta name="author" content="eDroid">
+	<meta name="description" content="Send messages to Discord through webhooks">
+	<meta property="og:title" content="Discord-Hook-Client">
+	<meta property="og:description" content="Send messages to Discord through webhooks">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="">
+	<meta property="og:image" content="http://github.edroidthedev.com/Discord-Hook-Client/ogo.png">
+	<meta property="twitter:card" content="summary">
+	<meta property="twitter:title" content="Discord-Hook-Client">
+	<meta property="twitter:description" content="Send messages to Discord through webhooks">
+	<meta property="twitter:site" content="">
+	<meta property="twitter:image" content="http://github.edroidthedev.com/Discord-Hook-Client/logo.png">
+
+	<script type="text/javascript">
+		function send_embed(embed, hook){
+			var req = new XMLHttpRequest();
+			req.open("POST", hook, true);
+			req.setRequestHeader("Content-type", "application/json");
+			req.send(JSON.stringify({embeds:[embed]}));
+		}
+
+		function send(form){
+			if(localStorage.hook && localStorage.hook != ""){
+				var title = form["title"].value,
+					description = form["description"].value,
+					url = form["url"].value,
+					timestamp = form["timestamp"].value,
+					color = parseInt((form["color"].value).replace("#", ""), 16);
+				var embed = {color: color};
+
+				if(title !== "") embed.title = title;
+				if(description !== "") embed.description = description;
+				if(url !== "") embed.url = url;
+				if(timestamp !== "") embed.timestamp = timestamp;
+
+				send_embed(embed, localStorage.hook);
+				form.reset();
+			}else{
+				alert("Set hook first!");
+			}
+			//parseInt("42e1bd", 16);
+		}
+
+		function set_hook(){
+			var hook;
+			if(hook = prompt("Discord Webhook:")){
+				if((/http(|s):\/\/discordapp\.com\/api\/webhooks\/\d{18}\/(.*)/).test(hook)){
+					localStorage.hook = hook;
+					document.querySelector("#hook_button").innerText = "Change Hook";
+				}else{
+					alert("Please provide a valid webhook!");
+					set_hook();
+				}
+			}
+		}
+
+		function load(){
+			if(localStorage.hook && localStorage.hook != ""){
+				document.querySelector("#hook_button").innerText = "Change Hook";
+			}
+		}
+	</script>
+	<link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body onload="load();">
+	<div align="center">
+		<div id="content">
+			<h2>Discord-Hook-Client - <a href="./">Message</a></h2>
+			<button onclick="set_hook();" id="hook_button" title="Set/Change Hook">Set Hook</button>
+
+			<br><br><br>
+
+			<form onsubmit="send(this);return false;">
+				<input type="text" name="title" placeholder="Title" maxlength="256" required>
+				<br>
+				<input type="text" name="description" placeholder="Description" maxlength="2048">
+				<br>
+				<input type="url" name="url" placeholder="Url">
+				<br>
+				<input type="text" name="timestamp" placeholder="Timestamp">
+				<br>
+				<input type="color" name="color">
+				<!--<br>
+				<input type="text" name="" placeholder="">
+				<br>
+				<input type="text" name="" placeholder="">
+				<br>
+				<input type="text" name="" placeholder="">
+				<br>
+				<input type="text" name="" placeholder="">
+				<br>
+				<input type="text" name="" placeholder="">-->
+
+				<br><br>
+				<button type="submit" title="Send Message">Send</button>
+			</form>
+
+			<span id="footer">Not affiliated with Discord. All trademarks belong to their rightful owners.</span>
+		</div>
+	</div>
+	<br><br>
+</body>
+</html>

@@ -39,8 +39,13 @@
 		function set_hook(){
 			var hook;
 			if(hook = prompt("Discord Webhook:")){
-				localStorage.hook = hook;
-				document.querySelector("#hook_button").innerText = "Change Hook";
+				if((/http(|s):\/\/discordapp\.com\/api\/webhooks\/\d{18}\/(.*)/).test(hook)){
+					localStorage.hook = hook;
+					document.querySelector("#hook_button").innerText = "Change Hook";
+				}else{
+					alert("Please provide a valid webhook!");
+					set_hook();
+				}
 			}
 		}
 
@@ -50,67 +55,12 @@
 			}
 		}
 	</script>
-	<style type="text/css">
-		@import url('https://fonts.googleapis.com/css?family=Ubuntu');
-		body {
-			background: #4a546e;
-		}
-
-		#content {
-			position: relative;
-			background: #5d698a;
-			width: 75%;
-			height: 460px;
-			border-radius: 50px;
-			margin-top: 60px;
-			padding-top: 20px;
-		}
-
-		h1 {
-			font-family: Ubuntu, sans-serif;
-			color: white;
-		}
-
-		button {
-			background: #7d87a1;
-			border: none;
-			border-radius: 5px;
-			font-size: 20px;
-			color: white;
-			padding: 16px 30px;
-			cursor: pointer;
-		}
-
-		input[type=text] {
-			height: 27px;
-			width: 55%;
-			font-family: 22px;
-			border: none;
-			padding-left: 5px;
-		}
-
-		form > button {
-			padding: 10px 23px;
-			background: #85c66a;
-			border-radius: 0px;
-		}
-
-		#footer {
-			position: absolute;
-   			bottom: 20px;
-   			left: 0;
-   			right: 0;
-			vertical-align: bottom;
-			font-family: Ubuntu, sans-serif;
-			font-size: 10px;
-			color: white;
-		}
-	</style>
+	<link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body onload="load();">
 	<div align="center">
 		<div id="content">
-			<h1>Discord-Hook-Client</h2>
+			<h2>Discord-Hook-Client - <a href="embed.html">Embed</a></h2>
 			<button onclick="set_hook();" id="hook_button" title="Set/Change Hook">Set Hook</button>
 
 			<br><br><br>
